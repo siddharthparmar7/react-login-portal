@@ -36,9 +36,8 @@ export class Register extends Component {
   handleSubmit(e) {
     // handle button click and dispatch register
     e.preventDefault();
-    this.setState({submitted: true})
+    this.setState({ submitted: true });
     this.props.register(this.state.user);
-
   }
 
   render() {
@@ -93,15 +92,18 @@ export class Register extends Component {
 
 // complete the below function
 function mapStateToProps(state) {
-    return state
+  return state;
 }
 
-function mapDispatchToProps(dispatch){
-    return {
-        register: (user) => userActions.register(user, dispatch)
-    }
+function mapDispatchToProps(dispatch) {
+  return {
+    register: (user) => userActions.register(user)(dispatch),
+  };
 }
 
-export const RegisterPage = connect(mapStateToProps, mapDispatchToProps)(Register)
+export const RegisterPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Register);
 
 export { RegisterPage as TestRegisterPage };

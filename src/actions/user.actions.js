@@ -9,7 +9,7 @@ export const userActions = {
   register,
 };
 
-function login(user, dispatch) {
+function login(user) {
   // return the promise using fetch which adds to localstorage on resolve
 
   function request(user) {
@@ -22,21 +22,33 @@ function login(user, dispatch) {
     return { type: userConstants.LOGIN_FAILURE, error };
   }
 
-  return userService
-    .login(user)
-    .then((res) => dispatch(request(user)))
-    .then((res) => dispatch(success(user)))
-    .then(() => {
-      history.push("/home");
-    })
-    .catch((e) => dispatch(failure(e)));
+  return (dispatch) => {
+    userService
+      .login(user)
+      .then(() => dispatch(request(user)))
+      .then(() => {
+        dispatch(success(user));
+        history.push("/home");
+      })
+      .catch((e) => dispatch(failure(e)));
+  };
 }
 
 function logout() {
   // complete this function
+
+  return (dispatch) => {
+    try {
+      userService.logout();
+      dispatch({ type: userConstants.LOGOUT });
+      history.push("/login");
+    } catch (e) {
+      console.log("error logout", e);
+    }
+  };
 }
 
-function register(user, dispatch) {
+function register(user) {
   // return the promise using fetch which dispatches appropriately
 
   function request(user) {
@@ -49,12 +61,14 @@ function register(user, dispatch) {
     return { type: userConstants.REGISTER_FAILURE, error };
   }
 
-  return userService
-    .register(user)
-    .then((res) => dispatch(request(user)))
-    .then((res) => dispatch(success(user)))
-    .then(() => {
-      history.push("/home");
-    })
-    .catch((e) => dispatch(failure(e)));
+  return (dispatch) => {
+    userService
+      .register(user)
+      .then(() => dispatch(request(user)))
+      .then(() => {
+        dispatch(success(user));
+        history.push("/home");
+      })
+      .catch((e) => dispatch(failure(e)));
+  };
 }
